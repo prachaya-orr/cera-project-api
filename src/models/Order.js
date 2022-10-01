@@ -1,19 +1,32 @@
-const { PAYMENT_SUCCESS } = require("../config/constants");
+const { PAYMENT_SUCCESS,PAYMENT_PENDING } = require('../config/constants');
 
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define(
-    'User',
+  const Order = sequelize.define(
+    'Order',
     {
-        status: {
-            type: DataTypes.ENUM(PAYMENT_SUCCESS, PAYMENT_PENDING),
-            allowNull: false,
-            defaultValue: PAYMENT_PENDING
-          },
-          invoiceDate: {
-            type: DataTypes.DATEONLY
-          },
+      status: {
+        type: DataTypes.ENUM(PAYMENT_SUCCESS, PAYMENT_PENDING),
+        allowNull: false,
+        defaultValue: PAYMENT_PENDING,
+      },
+      invoiceDate: {
+        type: DataTypes.DATEONLY,
+      },
     },
     { underscored: true }
   );
-  return User;
+
+  Order.associate = (db) => {
+    Order.hasMany(db.User),
+      {
+        foreignKey: {
+          name: 'userId',
+          allowNull: false,
+        },
+        onDelete: 'RESTRICT',
+        onUpdate: 'RESTRICT',
+      };
+  };
+
+  return Order;
 };

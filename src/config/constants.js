@@ -1,0 +1,2 @@
+exports.PAYMENT_SUCCESS = 'SUCCESS';
+exports.PAYMENT_PENDING = 'PENDING';

@@ -54,8 +54,8 @@ exports.login = async (req, res, next) => {
 
     const user = await User.findOne({
       where: {
-        [Op.or]: [{ email: email }]
-      }
+        [Op.or]: [{ email: email }],
+      },
     });
 
     if (!user) {
@@ -67,9 +67,13 @@ exports.login = async (req, res, next) => {
       throw new AppError('email address or password is invalid', 400);
     }
 
-    const token = genToken({ id: user.id });
+    const token = genToken({ id: user.id, roleAdmin: user.isAdmin });
     res.status(200).json({ token });
   } catch (err) {
     next(err);
   }
+};
+
+exports.getMe = (req, res) => {
+  res.status(200).json({ user: req.user });
 };

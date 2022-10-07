@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Order.associate = (db) => {
-    Order.hasMany(db.User),
+    Order.belongsTo(db.User,
       {
         foreignKey: {
           name: 'userId',
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         onDelete: 'RESTRICT',
         onUpdate: 'RESTRICT',
-      };
+      });
   };
 
   return Order;

@@ -1,15 +1,22 @@
 module.exports = (sequelize, DataTypes) => {
-  const Product = sequelize.define(
-    'Product',
+  const ProductList = sequelize.define(
+    'ProductList',
     {
-      productName: {
+      sizeValue: {
+        type: DataTypes.ENUM('XS', 'S', 'M', 'L', 'XL'),
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      colorValue: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
-      unitPrice: {
+      countStock: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
@@ -17,28 +24,19 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
     },
-    { underscored: true }
+    { underscored: true}
   );
 
-  Product.associate = (db) => {
-    Product.hasMany(db.ProductImage, {
+  ProductList.associate = (db) => {
+    ProductList.belongsTo(db.Product, {
       foreignKey: {
         name: 'productId',
         allowNull: false,
       },
       onDelete: 'RESTRICT',
       onUpdate: 'RESTRICT',
-    }),
-
-      Product.hasMany(db.ProductList, {
-        foreignKey: {
-          name: 'productId',
-          allowNull: false,
-        },
-        onDelete: 'RESTRICT',
-        onUpdate: 'RESTRICT',
-      });
+    });
   };
 
-  return Product;
+  return ProductList;
 };

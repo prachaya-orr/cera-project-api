@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
         validate: {
+          notEmpty: true,
           isEmail: true,
         },
       },
@@ -61,15 +62,14 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.associate = (db) => {
-    User.hasMany(db.Order),
-      {
-        foreignKey: {
-          name: 'userId',
-          allowNull: false,
-        },
-        onDelete: 'RESTRICT',
-        onUpdate: 'RESTRICT',
-      };
+    User.hasMany(db.Order, {
+      foreignKey: {
+        name: 'userId',
+        allowNull: false,
+      },
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
+    });
   };
 
   return User;

@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const ProductImage = sequelize.define(
     'ProductImage',
     {
-      ImageUrl: {
+      imageUrl: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {

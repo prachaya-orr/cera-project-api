@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       colorValue: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM('NAVY', 'PINK', 'RED', 'GREEN', 'BLUE'),
         allowNull: false,
         validate: {
           notEmpty: true,

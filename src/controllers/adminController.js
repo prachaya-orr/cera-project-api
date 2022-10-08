@@ -15,7 +15,7 @@ exports.getAllProducts = async (req, res, next) => {
 
 exports.createProduct = async (req, res, next) => {
   try {
-    const { productName, size, color, unitPrice, countStock, imageUrl } =
+    const { productName, size, color, unitPrice, countStock } =
       req.body;
 
     if (!productName) {

@@ -8,10 +8,10 @@ const morgan = require('morgan');
 
 const authRoute = require('./routes/authRoute');
 const userRoute = require('./routes/userRoute');
-const adminRoute = require('./routes/admintRoute');
+const adminRoute = require('./routes/adminRoute');
+const productRoute = require('./routes/productRoute');
 const notFound = require('./middlewares/notFound');
 const error = require('./middlewares/error');
-const authenticate = require('./middlewares/authenticate');
 
 const app = express();
 
@@ -24,8 +24,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/auth', authRoute);
+app.use('/admin', adminRoute);
 app.use('/users', userRoute);
-app.use('/addproduct', adminRoute);
+app.use('/shop', productRoute);
 
 
 app.use(notFound);

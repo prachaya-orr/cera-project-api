@@ -5,7 +5,7 @@ const adminController = require('../controllers/adminController');
 
 const router = express.Router();
 
-router.get('/productItem', adminController.getAllProducts);
+router.get('/editProducts', adminController.getAllProducts);
 
 router.post(
   '/createProduct',
@@ -13,6 +13,6 @@ router.post(
   adminController.createProduct
 );
 
-router.delete('/deleteProduct/:id',adminController.deleteProduct)
+router.delete('/editProducts/deleteProduct/:id',adminController.deleteProduct)
 
 module.exports = router;

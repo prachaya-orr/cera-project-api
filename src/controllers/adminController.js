@@ -15,8 +15,7 @@ exports.getAllProducts = async (req, res, next) => {
 
 exports.createProduct = async (req, res, next) => {
   try {
-    const { productName, size, color, unitPrice, countStock } =
-      req.body;
+    const { productName, size, color, unitPrice, countStock } = req.body;
 
     if (!productName) {
       throw new AppError('Product Name is required', 400);
@@ -73,20 +72,35 @@ exports.createProduct = async (req, res, next) => {
   }
 };
 
+exports.getOne = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const thisProduct = await Product.findOne({
+      where: { id: id },
+      include: [ProductImage, ProductList],
+    });
+    if (!thisProduct) {
+      throw new AppError('Not found this product', 400);
+    }
+    res.status(200).json({ thisProduct: thisProduct });
+  } catch (err) {
+    next(err);
+  }
+};
 
 exports.deleteProduct = async (req, res, next) => {
-	try {
-		const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-		const product = await Product.findOne({ where: { id } });
+    const product = await Product.findOne({ where: { id } });
 
-		if (!product) {
-			return res.status(400).json({ message: 'cannot delete the product' });
-		}
+    if (!product) {
+      return res.status(400).json({ message: 'cannot delete the product' });
+    }
 
-		await product.destroy();
-		res.status(200).json({ message: 'Delete Product Success' });
-	} catch (err) {
-		next(err);
-	}
+    await product.destroy();
+    res.status(200).json({ message: 'Delete Product Success' });
+  } catch (err) {
+    next(err);
+  }
 };

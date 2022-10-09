@@ -72,3 +72,21 @@ exports.createProduct = async (req, res, next) => {
     next(err);
   }
 };
+
+
+exports.deleteProduct = async (req, res, next) => {
+	try {
+		const { id } = req.params;
+
+		const product = await Product.findOne({ where: { id } });
+
+		if (!product) {
+			return res.status(400).json({ message: 'cannot delete the product' });
+		}
+
+		await product.destroy();
+		res.status(200).json({ message: 'Delete Product Success' });
+	} catch (err) {
+		next(err);
+	}
+};

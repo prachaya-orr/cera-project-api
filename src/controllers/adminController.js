@@ -160,12 +160,19 @@ exports.deleteProduct = async (req, res, next) => {
     const { id } = req.params;
 
     const product = await Product.findOne({ where: { id } });
+    const productImage = await ProductImage.findOne({
+      where: { productId: id },
+    });
+    console.log(productImage.imageUrl);
+    const secureUrl = await cloudinary.getPublicId(productImage.imageUrl);
+    console.log(secureUrl);
 
     if (!product) {
       return res.status(400).json({ message: 'cannot delete the product' });
     }
 
     await product.destroy();
+    await cloudinary.deletePic(secureUrl);
     res.status(200).json({ message: 'Delete Product Success' });
   } catch (err) {
     next(err);

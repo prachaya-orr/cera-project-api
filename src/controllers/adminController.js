@@ -72,17 +72,84 @@ exports.createProduct = async (req, res, next) => {
   }
 };
 
+exports.updateProduct = async (req, res, next) => {
+  try {
+    const { productName, size, color, unitPrice, countStock } = req.body;
+    const { id } = req.params;
+    console.log(req.files);
+
+    const seletedProduct = await ProductImage.findOne({
+      where: { productId: id },
+    });
+
+    // console.log(seletedProduct);
+    const imageUrl = seletedProduct.imageUrl;
+    console.log(imageUrl);
+
+    if (req.files?.imageUrl?.[0]) {
+      var secureUrlUpdate = await cloudinary.upload(
+        req.files?.imageUrl?.[0].path,
+        imageUrl ? cloudinary.getPublicId(imageUrl) : undefined
+      );
+    }
+
+    const updateValueProduct = {};
+    const updateValueProductList = {};
+    const updateValueProductImage = {};
+
+    if (productName) {
+      updateValueProduct.productName = productName;
+    }
+
+    if (size) {
+      updateValueProductList.sizeValue = size;
+    }
+
+    if (color) {
+      updateValueProductList.colorValue = color;
+    }
+
+    if (unitPrice) {
+      updateValueProduct.unitPrice = unitPrice;
+    }
+
+    if (countStock) {
+      updateValueProductList.countStock = countStock;
+    }
+
+    if (req.files?.imageUrl?.[0]) {
+      updateValueProductImage.imageUrl = secureUrlUpdate;
+      fs.unlinkSync(req.files?.imageUrl?.[0].path);
+    }
+
+    await Product.update(updateValueProduct, {
+      where: { id },
+    });
+
+    await ProductList.update(updateValueProductList, {
+      where: { productId: id },
+    });
+    if (req.files?.imageUrl?.[0]) {
+      await ProductImage.update(updateValueProductImage, {
+        where: { productId: id },
+      });
+    }
+    res.status(200).json({ message: 'Update Success' });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.getOne = async (req, res, next) => {
   try {
     const { id } = req.params;
+
     const thisProduct = await Product.findOne({
       where: { id: id },
       include: [ProductImage, ProductList],
     });
-    if (!thisProduct) {
-      throw new AppError('Not found this product', 400);
-    }
-    res.status(200).json({ thisProduct: thisProduct });
+
+    res.status(200).json({ thisProduct });
   } catch (err) {
     next(err);
   }

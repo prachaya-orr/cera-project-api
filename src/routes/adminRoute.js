@@ -21,6 +21,13 @@ router.post(
   adminController.createProduct
 );
 
+router.patch(
+  '/editProducts/product/:id',
+  authenticateAdmin,
+  upload.fields([{ name: 'imageUrl', maxCount: 1 }]),
+  adminController.updateProduct
+);
+
 router.delete('/editProducts/deleteProduct/:id', adminController.deleteProduct);
 
 module.exports = router;

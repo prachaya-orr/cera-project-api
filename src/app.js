@@ -1,5 +1,5 @@
-// const db = require('./models/index');
-// db.sequelize.sync({ alter: true });
+const db = require('./models/index');
+db.sequelize.sync({ alter: true });
 
 require('dotenv').config();
 const express = require('express');

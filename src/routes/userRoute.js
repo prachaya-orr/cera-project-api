@@ -12,5 +12,12 @@ router.patch(
   upload.fields([{ name: 'profileImage', maxCount: 1 }]),
   userController.updateUser
 );
+router.post(
+  '/cart',
+  authenticate,
+  upload.fields([{ name: 'profileImage', maxCount: 1 }]),
+  userController.updateUser
+);
+
 
 module.exports = router;

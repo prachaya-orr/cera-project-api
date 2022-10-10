@@ -67,9 +67,17 @@ module.exports = (sequelize, DataTypes) => {
         name: 'userId',
         allowNull: false,
       },
-      onDelete: 'RESTRICT',
+      onDelete: 'CASCADE',
       onUpdate: 'RESTRICT',
-    });
+    }),
+      User.hasOne(db.CartItem, {
+        foreignKey: {
+          name: 'userId',
+          allowNull: false,
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'RESTRICT',
+      });
   };
 
   return User;

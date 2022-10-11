@@ -1,4 +1,4 @@
-const { Cart, Product } = require('../models');
+const { CartItem, Product, ProductImage, ProductList } = require('../models');
 const AppError = require('../utils/appError');
 
 exports.createCart = async (req, res, next) => {
@@ -7,11 +7,11 @@ exports.createCart = async (req, res, next) => {
     // const { id } = req.params;
 
     const userId = req.user.id;
-
-    const cart = await Cart.findOne({
-      where: { userId, productId }
+    console.log(userId);
+    const cart = await CartItem.findOne({
+      where: { userId, productId },
     });
-    console.log(cart);
+    // console.log(cart);
     if (cart) {
       throw new AppError('already have this item in cart', 400);
     }
@@ -19,21 +19,31 @@ exports.createCart = async (req, res, next) => {
     const item = {
       userId,
       productId,
-      quantity: 1
+      quantity: 1,
     };
 
-    const createCartFromUser = await Cart.create(item);
-    res.status(200).json({ createCartFromUser });
-  } catch (err) {
-    next(err);
-  }
-};
+    await CartItem.create(item);
 
-exports.deleteCart = async (req, res, next) => {
-  try {
-    const { cartId } = req.params;
-    await Cart.destroy({ where: { id: cartId } });
-    res.status(200).json('success delete');
+    const JoinCartData = await CartItem.findOne({
+      where: { userId, productId },
+      include: [
+        {
+          model: Product,
+          include: [{ model: ProductList }, { model: ProductImage }],
+        },
+      ],
+    });
+
+    const {
+      Product: {
+        productName,
+        unitPrice,
+        ProductLists: [{ sizeValue, colorValue, countStock }],
+        ProductImages: [{ imageUrl }],
+      },
+    } = JoinCartData;
+
+    res.status(200).json({ JoinCartData });
   } catch (err) {
     next(err);
   }
@@ -41,12 +51,22 @@ exports.deleteCart = async (req, res, next) => {
 
 exports.getCart = async (req, res, next) => {
   try {
-    const items = await Cart.findAll({
+    // const items = await CartItem.findAll({
+    //   where: { userId: req.user.id },
+    //   include: Product,
+    // });
+
+    const JoinCartData = await CartItem.findAll({
       where: { userId: req.user.id },
-      include: Product
+      include: [
+        {
+          model: Product,
+          include: [{ model: ProductList }, { model: ProductImage }],
+        },
+      ],
     });
 
-    res.status(201).json({ items });
+    res.status(201).json({ JoinCartData });
   } catch (err) {
     next(err);
   }

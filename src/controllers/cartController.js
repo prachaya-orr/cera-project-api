@@ -1,3 +1,4 @@
+const { where } = require('sequelize');
 const { CartItem, Product, ProductImage, ProductList } = require('../models');
 const AppError = require('../utils/appError');
 
@@ -76,11 +77,19 @@ exports.deleteCart = async (req, res, next) => {
   try {
     const { cartId } = req.params;
 
-    const id  = cartId;
-
-    await CartItem.destroy({ where: { id } });
-    res.json(200).json({message:'success Delete'})
+    await CartItem.destroy({ where: { id: cartId } });
+    res.status(200).json({ message: 'success Delete' });
   } catch (err) {
     next(err);
   }
+};
+
+exports.updateCart = async (req, res, next) => {
+  try {
+    const { cartItem } = req.body;
+    console.log(cartItem)
+
+    await CartItem.update(cartItem, { where: { id: cartItem.id } });
+    res.status(200).json({ message: 'success Update' });
+  } catch (err) {next(err)}
 };

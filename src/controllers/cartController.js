@@ -71,3 +71,16 @@ exports.getCart = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.deleteCart = async (req, res, next) => {
+  try {
+    const { cartId } = req.params;
+
+    const id  = cartId;
+
+    await CartItem.destroy({ where: { id } });
+    res.json(200).json({message:'success Delete'})
+  } catch (err) {
+    next(err);
+  }
+};

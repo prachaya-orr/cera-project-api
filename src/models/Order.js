@@ -1,4 +1,4 @@
-const { PAYMENT_SUCCESS,PAYMENT_PENDING } = require('../config/constants');
+const { PAYMENT_SUCCESS, PAYMENT_PENDING } = require('../config/constants');
 
 module.exports = (sequelize, DataTypes) => {
   const Order = sequelize.define(
@@ -17,15 +17,22 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Order.associate = (db) => {
-    Order.hasMany(db.User),
-      {
+    Order.belongsTo(db.User, {
+      foreignKey: {
+        name: 'userId',
+        allowNull: false,
+      },
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
+    }),
+      Order.hasMany(db.OrderItem, {
         foreignKey: {
-          name: 'userId',
+          name: 'orderId',
           allowNull: false,
         },
-        onDelete: 'RESTRICT',
+        onDelete: 'CASCADE',
         onUpdate: 'RESTRICT',
-      };
+      });
   };
 
   return Order;

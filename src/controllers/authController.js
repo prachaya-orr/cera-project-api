@@ -1,6 +1,7 @@
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { Op } = require('sequelize');
 
 const AppError = require('../utils/appError');
 const { User } = require('../models');
@@ -41,4 +42,38 @@ exports.register = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+exports.login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    if (typeof email !== 'string' || typeof password !== 'string') {
+      throw new AppError('email address or mobile or password is invalid', 400);
+    }
+
+    const user = await User.findOne({
+      where: {
+        [Op.or]: [{ email: email }],
+      },
+    });
+
+    if (!user) {
+      throw new AppError('email address is invalid', 400);
+    }
+
+    const isCorrect = await bcrypt.compare(password, user.password);
+    if (!isCorrect) {
+      throw new AppError('email address or password is invalid', 400);
+    }
+
+    const token = genToken({ id: user.id, roleAdmin: user.isAdmin });
+    res.status(200).json({ token });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getMe = (req, res) => {
+  res.status(200).json({ user: req.user });
 };

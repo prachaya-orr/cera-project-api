@@ -87,9 +87,37 @@ exports.deleteCart = async (req, res, next) => {
 exports.updateCart = async (req, res, next) => {
   try {
     const { cartItem } = req.body;
-    console.log(cartItem)
+    console.log(cartItem, '42342');
 
-    await CartItem.update(cartItem, { where: { id: cartItem.id } });
-    res.status(200).json({ message: 'success Update' });
-  } catch (err) {next(err)}
+    const item = await CartItem.update(cartItem, { where: { id: cartItem.id } });
+    // console.log(res);
+    res.status(200).json({ item });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getTotalPrice = async (req, res, next) => {
+  try {
+    const JoinCartData = await CartItem.findAll({
+      where: { userId: req.user.id },
+      include: [
+        {
+          model: Product,
+          attributes: ['unitPrice'],
+        },
+      ],
+    });
+
+    const totalPrice = JoinCartData.reduce(
+      (a, c) => a + c?.quantity * c?.Product?.unitPrice,
+      0
+    );
+
+    console.log(totalPrice);
+
+    res.status(201).json({ totalPrice });
+  } catch (err) {
+    next(err);
+  }
 };

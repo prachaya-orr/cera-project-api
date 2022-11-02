@@ -1,4 +1,3 @@
-const { where } = require('sequelize');
 const { CartItem, Product, ProductImage, ProductList } = require('../models');
 const AppError = require('../utils/appError');
 

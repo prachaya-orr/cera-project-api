@@ -9,9 +9,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: PAYMENT_PENDING,
       },
-      invoiceDate: {
-        type: DataTypes.DATEONLY,
-      },
     },
     { underscored: true }
   );

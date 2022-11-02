@@ -88,7 +88,9 @@ exports.updateCart = async (req, res, next) => {
     const { cartItem } = req.body;
     console.log(cartItem, '42342');
 
-    const item = await CartItem.update(cartItem, { where: { id: cartItem.id } });
+    const item = await CartItem.update(cartItem, {
+      where: { id: cartItem.id },
+    });
     // console.log(res);
     res.status(200).json({ item });
   } catch (err) {
@@ -113,7 +115,8 @@ exports.getTotalPrice = async (req, res, next) => {
       0
     );
 
-    console.log(totalPrice);
+    req.totalPrice = totalPrice;
+    // console.log(totalPrice);
 
     res.status(201).json({ totalPrice });
   } catch (err) {

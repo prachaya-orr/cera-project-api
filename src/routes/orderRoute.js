@@ -11,4 +11,11 @@ router.post(
   orderController.createOrder
 );
 
+router.patch(
+  '/',
+  authenticate,
+  orderController.updateStatusOrder
+);
+
+
 module.exports = router;

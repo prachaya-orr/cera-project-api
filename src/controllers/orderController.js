@@ -27,3 +27,18 @@ exports.createOrder = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.updateStatusOrder = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+
+    const { id: orderId } = await Order.findOne({ where: userId });
+
+    await Order.update({ status: 'SUCCESS' }, { where: { id: orderId } });
+    res.status(200).json({ message: 'status order : payment success' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+

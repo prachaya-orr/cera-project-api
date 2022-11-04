@@ -4,14 +4,13 @@ const AppError = require('../utils/appError');
 exports.createCart = async (req, res, next) => {
   try {
     const { productId } = req.body;
-    // const { id } = req.params;
 
     const userId = req.user.id;
     console.log(userId);
     const cart = await CartItem.findOne({
       where: { userId, productId },
     });
-    // console.log(cart);
+
     if (cart) {
       throw new AppError('already have this item in cart', 400);
     }
@@ -51,11 +50,6 @@ exports.createCart = async (req, res, next) => {
 
 exports.getCart = async (req, res, next) => {
   try {
-    // const items = await CartItem.findAll({
-    //   where: { userId: req.user.id },
-    //   include: Product,
-    // });
-
     const JoinCartData = await CartItem.findAll({
       where: { userId: req.user.id },
       include: [
@@ -91,7 +85,6 @@ exports.updateCart = async (req, res, next) => {
     const item = await CartItem.update(cartItem, {
       where: { id: cartItem.id },
     });
-    // console.log(res);
     res.status(200).json({ item });
   } catch (err) {
     next(err);
@@ -116,7 +109,6 @@ exports.getTotalPrice = async (req, res, next) => {
     );
 
     req.totalPrice = totalPrice;
-    // console.log(totalPrice);
 
     res.status(201).json({ totalPrice });
   } catch (err) {

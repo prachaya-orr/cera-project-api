@@ -2,7 +2,14 @@ const fs = require('fs');
 const cloudinary = require('../utils/cloudinary');
 
 const AppError = require('../utils/appError');
-const { ProductImage, Product, ProductList } = require('../models');
+const {
+  ProductImage,
+  Product,
+  ProductList,
+  OrderItem,
+  Order,
+  User,
+} = require('../models');
 
 exports.getAllProducts = async (req, res, next) => {
   try {
@@ -174,6 +181,30 @@ exports.deleteProduct = async (req, res, next) => {
     await product.destroy();
     await cloudinary.deletePic(secureUrl);
     res.status(200).json({ message: 'Delete Product Success' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getAllOrders = async (req, res, next) => {
+  try {
+    const OrderItems = await OrderItem.findAll({
+      include: [
+        {
+          model: Order,
+          attributes: ['status'],
+          include: [
+            {
+              model: User,
+              attributes: ['firstName'],
+            },
+          ],
+        },
+
+        { model: Product, attributes: ['productName'] },
+      ],
+    });
+    res.status(200).json({ OrderItems });
   } catch (err) {
     next(err);
   }

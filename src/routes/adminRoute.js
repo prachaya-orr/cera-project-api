@@ -8,6 +8,8 @@ const router = express.Router();
 
 router.get('/editProducts', authenticateAdmin, adminController.getAllProducts);
 
+router.get('/checkbilling', authenticateAdmin, adminController.getAllOrders);
+
 router.get(
   '/editProducts/getOne/:id',
   authenticateAdmin,

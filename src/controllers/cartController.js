@@ -1,4 +1,10 @@
-const { CartItem, Product, ProductImage, ProductList } = require('../models');
+const {
+  CartItem,
+  Product,
+  ProductImage,
+  ProductList,
+  User,
+} = require('../models');
 const AppError = require('../utils/appError');
 
 exports.createCart = async (req, res, next) => {
@@ -57,6 +63,7 @@ exports.getCart = async (req, res, next) => {
           model: Product,
           include: [{ model: ProductList }, { model: ProductImage }],
         },
+        { model: User, attributes: { exclude: 'password' } },
       ],
     });
 
@@ -72,6 +79,15 @@ exports.deleteCart = async (req, res, next) => {
 
     await CartItem.destroy({ where: { id: cartId } });
     res.status(200).json({ message: 'success Delete' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.clearCart = async (req, res, next) => {
+  try {
+    await CartItem.destroy({ where: { userId: req.user.id } });
+    res.status(200).json({ message: 'success clear Cart' });
   } catch (err) {
     next(err);
   }

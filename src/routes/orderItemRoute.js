@@ -1,15 +1,16 @@
 const express = require('express');
 
 const authenticate = require('../middlewares/authenticate');
-const orderController = require('../controllers/orderController');
+const orderItemController = require('../controllers/orderItemController');
 
 const router = express.Router();
 
-router.patch(
+router.post(
   '/',
   authenticate,
-  orderController.updateStatusOrder
+  orderItemController.createOrderItem
 );
+
 
 
 module.exports = router;

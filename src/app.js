@@ -8,10 +8,12 @@ const morgan = require('morgan');
 
 const authRoute = require('./routes/authRoute');
 const userRoute = require('./routes/userRoute');
+const paymentRoute = require('./routes/paymentRoute');
 const adminRoute = require('./routes/adminRoute');
 const productRoute = require('./routes/productRoute');
 const cartRoute = require('./routes/cartRoute');
 const orderRoute = require('./routes/orderRoute');
+const orderItemRoute = require('./routes/orderItemRoute')
 const notFound = require('./middlewares/notFound');
 const error = require('./middlewares/error');
 
@@ -29,7 +31,8 @@ app.use('/auth', authRoute);
 app.use('/admin', adminRoute);
 app.use('/users', cartRoute);
 app.use('/order', orderRoute);
-// app.use('/users', userRoute);
+app.use('/orderItem', orderItemRoute);
+app.use('/payment', paymentRoute);
 app.use('/shop', productRoute);
 
 app.use(notFound);
